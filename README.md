@@ -1,21 +1,21 @@
-﻿# OrderFlow
+# OrderFlow
 
 [![CI](https://github.com/hamzamehmood46/orderflow-dotnet/actions/workflows/ci.yml/badge.svg)](https://github.com/hamzamehmood46/orderflow-dotnet/actions/workflows/ci.yml)
 
 An event-driven order-processing service in **.NET 8 / ASP.NET Core**. It demonstrates the reliability patterns that keep integration platforms healthy in production: **idempotent APIs, asynchronous processing, exponential-backoff retries, and dead-letter handling.**
 
 ```
-POST /api/orders â”€â”€â–º validate â”€â”€â–º persist (EF Core) â”€â”€â–º 202 Accepted
-   Idempotency-Key                        â”‚
-                                          â–¼ OrderPlaced event
-                                   â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-                                   â”‚ message bus  â”‚  (in-process channel; swappable
-                                   â””â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”˜   for Azure Service Bus)
-                                          â–¼
+POST /api/orders ──► validate ──► persist (EF Core) ──► 202 Accepted
+   Idempotency-Key                        │
+                                          ▼ OrderPlaced event
+                                   ┌──────────────┐
+                                   │ message bus  │  (in-process channel; swappable
+                                   └──────┬───────┘   for Azure Service Bus)
+                                          ▼
                                    OrderWorker (BackgroundService)
-                                   retry 250ms â†’ 500ms â†’ 1s â€¦
-                                     â”‚                    â”‚
-                              success â–¼                   â–¼ retries exhausted
+                                   retry 250ms → 500ms → 1s …
+                                     │                    │
+                              success ▼                   ▼ retries exhausted
                           Order = Completed        Order = Failed + dead-letter entry
 ```
 
