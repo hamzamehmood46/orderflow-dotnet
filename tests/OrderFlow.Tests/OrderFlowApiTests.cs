@@ -123,6 +123,19 @@ public class OrderFlowApiTests(OrderFlowFactory factory) : IClassFixture<OrderFl
     }
 
     [Fact]
+    public async Task CreatedAt_is_returned_as_UTC_with_a_Z_so_clients_do_not_read_it_as_local_time()
+    {
+        var created = await (await PlaceAsync("SKU-OK")).Content.ReadFromJsonAsync<OrderResponse>();
+        await WaitForSettledAsync(created!.Id);
+
+        // Read the raw JSON: the typed DTO would hide whether the "Z" is present.
+        var json = await _client.GetStringAsync($"/api/orders/{created.Id}");
+        using var doc = System.Text.Json.JsonDocument.Parse(json);
+
+        Assert.EndsWith("Z", doc.RootElement.GetProperty("createdAt").GetString());
+    }
+
+    [Fact]
     public async Task Missing_idempotency_key_is_rejected()
     {
         var response = await _client.PostAsJsonAsync("/api/orders", Request("SKU-OK"));
