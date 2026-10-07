@@ -19,6 +19,7 @@ using (var scope = app.Services.CreateScope())
 
 app.UseSwagger();
 app.UseSwaggerUI();
+app.MapGet("/", () => Results.Redirect("/swagger")).ExcludeFromDescription();
 app.MapControllers();
 app.MapHealthChecks("/health");
 
