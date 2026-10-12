@@ -9,4 +9,4 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build --chown=app:app /app .
 USER app
-ENTRYPOINT ["/bin/sh", "-c", "export ASPNETCORE_URLS=http://0.0.0.0:${PORT:-8080}; exec dotnet OrderFlow.Api.dll"]
+ENTRYPOINT ["/bin/sh", "-c", "export ASPNETCORE_URLS=http://0.0.0.0:${PORT:-8080}; export ConnectionStrings__Orders=\"Data Source=/tmp/orderflow.db\"; exec dotnet OrderFlow.Api.dll"]
