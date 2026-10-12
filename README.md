@@ -2,6 +2,8 @@
 
 [![CI](https://github.com/hamzamehmood46/orderflow-dotnet/actions/workflows/ci.yml/badge.svg)](https://github.com/hamzamehmood46/orderflow-dotnet/actions/workflows/ci.yml)
 
+**Live demo: [orderflow-dotnet.onrender.com/swagger](https://orderflow-dotnet.onrender.com/swagger)** (Swagger UI). Try POST /api/orders with an Idempotency-Key header and send it twice: you get the same order back. Hosted on Render's free tier, so the first load after idle can take about a minute; demo data resets on restart.
+
 An event-driven order-processing service in **.NET 8 / ASP.NET Core**. It demonstrates the reliability patterns that keep integration platforms healthy in production: **idempotent APIs, asynchronous processing, exponential-backoff retries, and dead-letter handling.**
 
 ```
